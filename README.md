@@ -6,7 +6,7 @@
 ![HITS](https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Fth3-j0k3r%2FPatronus)
 
 
-Patronus is all in one Static Anlysis suite for extensively used languages like Java, Golang and Javascript. The toolkit supports a ground up and highly automated approach where the user can configure the repositories from where the tool will pull the source and run the designated scans against them. Patronus can be run in an independent instance without intervening with the current CI/CD pipeline and hands out a consolidated output in JSON format. 
+Patronus is all in one Static Analysis suite for extensively used languages like Java, Golang, and Javascript. The toolkit supports a ground up and highly automated approach where the user can configure the repositories from where the tool will pull the source and run the designated scans against them. Patronus can be run in an independent instance without intervening with the current CI/CD pipeline and hands out a consolidated output in JSON format.
 
 ---
 
