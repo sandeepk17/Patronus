@@ -56,7 +56,7 @@ class MyRemoteCallbacks(pygit2.RemoteCallbacks):
         path = Path("%s%s" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo))
         try:
             pygit2.clone_repository("ssh://%s" % (url.replace('org:', 'org/')),
-                                   "%s%s" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo), callbacks=MyRemoteCallbacks())
+                                   "%s%s" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repos), callbacks=MyRemoteCallbacks())
             logging.info('Successfully cloned repo %s to %s%s' % (repo,self.config.PATRONUS_DOWNLOAD_LOCATION, repo))
         except Exception as e:
             print(e)

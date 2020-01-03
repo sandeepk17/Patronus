@@ -278,7 +278,7 @@ class Java():
         """
         """
         parent_dir = dirname(dirname(os.path.abspath(os.path.dirname(__file__))))
-        os.chdir(parent_dir + "/tools/findsecbugs-cli-1.9.0/")
+        os.chdir(parent_dir + "/tools/findsecbugs")
         try:
             if build is "maven":    
                 self.utils.execute_cmd("./findsecbugs.sh -xml -output %s%s/spotbugsXml.xml %s%s" % (self.config.PATRONUS_DOWNLOAD_LOCATION,repo, self.config.PATRONUS_DOWNLOAD_LOCATION,repo), repo)

@@ -2,9 +2,11 @@ FROM centos:centos7
 
 #set versions
 ENV JAVA_VERSION=1.8.0
-ENV MAVEN_VERSION=3.6.1
+ENV MAVEN_VERSION=3.6.3
 ENV GRADLE_VERSION=5.4
 ENV NODEJS_VERSION=6.4.1
+ENV FIND_SEC_BUGS_VERSION=
+ENV DEPENDENCY_CHECKER_VERSION=5.2.4
 
 
 RUN yum -y update && yum clean all
@@ -60,13 +62,28 @@ RUN cp /go/bin/gosec /usr/bin/
 
 
 #install cloc
-npm install -g cloc
+RUN npm install -g cloc
 
 ADD . /root/Patronus
 WORKDIR /root/Patronus
+
+RUN mkdir tools
+WORKDIR /root/Patronus/tools
+
+#install dependency-check
+RUN curl https://dl.bintray.com/jeremy-long/owasp/dependency-check-${DEPENDENCY_CHECKER_VERSION}-release.zip -o dependency_check.zip -L
+RUN unzip dependency_check.zip
+RUN rm -rf dependency_check.zip
+
+#install find-sec-bugs
+RUN curl https://github.com/find-sec-bugs/find-sec-bugs/releases/download/version-1.10.1/findsecbugs-cli-1.10.1.zip -o findsecbugs.zip -L
+RUN unzip findsecbugs.zip -d findsecbugs
+RUN rm -rf findsecbugs.zip
+RUN chmod +x findsecbugs/findsecbugs.sh
+
+WORKDIR /root/Patronus
 RUN pip3 install -r requirements.txt
 
-
 # cronjob
-yum -y install cronie
+RUN yum -y install cronie
 RUN (crontab -l 2>/dev/null; echo "10 08 * * * Patronus/main.py >> /tmp/patronus.txt") | crontab -

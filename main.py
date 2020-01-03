@@ -2,6 +2,7 @@ from core.parsers.dependency_check_parser import Dependencycheckparser
 from core.compositionanalysis.dependencycheck import DependencyCheck
 from core.parsers.npmaudit_parser import Npmauditparser
 from core.parsers.findsecbugs_parser import Fsbparser
+from core.secretsscanning.gitleaks import Gitleaks
 from core.parsers.gosec_parser import Gosecparser
 from core.vcs.bitbucket import MyRemoteCallbacks
 from core.utils.json_parsing import Jsonparsing 
@@ -25,6 +26,7 @@ import time
 import json
 import os
 
+
 mrc = MyRemoteCallbacks()
 config = Config()
 java = Java()
@@ -40,6 +42,7 @@ fsbp = Fsbparser()
 dcp = Dependencycheckparser()
 np = Npmauditparser()
 utils = Utils()
+gl = Gitleaks()
 
 java_repos = []
 go_repos = []
@@ -164,6 +167,20 @@ def filter_repos_by_lang():
             node_repos.append(repo['repo'])
     return
 
+def gitleaks():
+    print(Fore.YELLOW + "[+]---------- Gitleaks scanning for  %s -------------" % (
+        repo) + Style.RESET_ALL)
+    gl.Gitleaks(repo)
+    return
+
+def gitleaks_for_all_repos(repos:str):
+    pool = Pool(processes=multiprocessing.cpu_count())
+    res = pool.map(gitleaks, repos)
+    pool.close()
+    pool.join()
+    return
+
+
 def initiate_scan():
     """
     """
@@ -177,6 +194,7 @@ def initiate_scan():
     filter_repos_by_lang()
     scan_all_repos(java_repos + go_repos + node_repos)
     dependency_check_for_all_repos(java_repos + node_repos)
+    gitleaks_for_all_repos(java_repos + go_repos + node_repos)
     scan_complete()
     return
 
