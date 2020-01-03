@@ -37,7 +37,7 @@ class Utils():
 	def run_cloc(self, repo:str):
 		parent_dir = dirname(dirname(os.path.abspath(os.path.dirname(__file__))))
 		os.chdir(parent_dir + '/tools')
-		self.execute_cmd('perl cloc-1.82.pl %s%s --json --out=%s%s/cloc.txt' % (self.const.DOWNLOAD_LOCATION,repo,self.const.DOWNLOAD_LOCATION, repo), repo)
+		self.execute_cmd('cloc %s%s --json --out=%s%s/cloc.txt' % (self.const.DOWNLOAD_LOCATION,repo,self.const.DOWNLOAD_LOCATION, repo), repo)
 		return
 
 	def parse_cloc(self, repo:str):
