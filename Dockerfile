@@ -49,8 +49,6 @@ RUN \
     curl -L https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -o gradle-${GRADLE_VERSION}-bin.zip && \
     unzip gradle-${GRADLE_VERSION}-bin.zip && \
     rm gradle-${GRADLE_VERSION}-bin.zip
-
-# Export some environment variables
 ENV GRADLE_HOME=/usr/local/gradle-${GRADLE_VERSION}
 ENV PATH=$PATH:$GRADLE_HOME/bin JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-openjdk
 
@@ -61,8 +59,14 @@ RUN go get github.com/securego/gosec/cmd/gosec
 RUN cp /go/bin/gosec /usr/bin/
 
 
+#install cloc
+npm install -g cloc
+
 ADD . /root/Patronus
 WORKDIR /root/Patronus
 RUN pip3 install -r requirements.txt
 
 
+# cronjob
+yum -y install cronie
+RUN (crontab -l 2>/dev/null; echo "10 08 * * * Patronus/main.py >> /tmp/patronus.txt") | crontab -
