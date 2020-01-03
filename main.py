@@ -10,7 +10,6 @@ from core.sast.constants import Constants
 from core.utils.commands import Command
 from core.sast.nodejs import NodeJs
 from core.sast.golang import GoLang
-from file import check_output_files
 from core.utils.utils import Utils
 from colorama import Fore, Style
 from multiprocessing import Pool
