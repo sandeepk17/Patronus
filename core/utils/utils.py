@@ -80,8 +80,9 @@ class Utils():
 				cursor = connection.cursor(prepared=True)
 				result = cursor.execute(sql_insert_query, val)
 				connection.commit()
+				logging.info("Succefully sent data to database for project %s. Error: %s" % (repo, error))
 			except mysql.connector.Error as error:
-				logging.debug("Error sending data for project %s. Error: %s" % (repo, error))
+				logging.debug("Error sending data to database for project %s. Error: %s" % (repo, error))
 				connection.rollback()
 			finally:
 			    if(connection.is_connected()):
@@ -89,20 +90,24 @@ class Utils():
 			        connection.close()
 			return
 
-	def mysql_connection(self):
+	def mysql_connection(self, repo):
 		# path = os.path.dirname(os.path.abspath(__file__))
 		# config = configparser.ConfigParser()
 		# config_file = os.path.join(os.path.dirname(__file__) + '/../../config')
 		# config.read(config_file)
 		# config.sections()
 		# connection = mysql.connector.connect(host=config['DB']['host'], database=config['DB']['database'], user=config['DB']['user'], password=config['DB']['password'])
-		connection = mysql.connector.connect(host=self.config.DB_HOST, database=self.config.DB_DATABASE, user=self.config.DB_USER, password=self.config.DB_PASSWORD)
+		try
+			connection = mysql.connector.connect(host=self.config.DB_HOST, database=self.config.DB_DATABASE, user=self.config.DB_USER, password=self.config.DB_PASSWORD)
+			logging.debug("Mysql connection success for project %s. Error: %s" % (repo))
+		except mysql.connector.Error as error:
+			logging.debug("Mysql connection error for project %s. Error: %s" % (repo, error))
 		return connection
 
 	def check_issue_exits(self, repo:str, text:str):
 		issues_list = []
 		try:
-		    connection = self.mysql_connection()
+		    connection = self.mysql_connection(repo)
 		    sql_select_query = "SELECT hash from results WHERE project_name=%s"
 		    res_hash = hashlib.sha256(text.encode()).hexdigest()
 		    val = (repo,)
