@@ -2,6 +2,7 @@ from core.utils.elastic import elastic
 from mysql.connector import errorcode
 from core.utils.utils import Utils
 from mysql.connector import Error
+from config.config import Config
 import mysql.connector
 import configparser
 import requests
@@ -11,7 +12,6 @@ import uuid
 import time
 import os
 import sys
-from config.config import Config
 
 class Dependencycheckparser():
 	def __init__(self):
@@ -32,6 +32,7 @@ class Dependencycheckparser():
 									issue["CVE"] = j['name']
 									issue["description"] = j['description']
 									issue["source_url"] = j['references'][0]['url']
+									logging.info("return of check_issue_exits for project %s : %s" % (repo, check_issue_exits(repo, str(issue))))
 									if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 										self.utils.sent_result_to_db(repo, str(issue), 'java', 'dependency-check')
 										self.es.push_data_to_elastic_search(issue, repo)
@@ -49,6 +50,7 @@ class Dependencycheckparser():
 									issue["CVE"] = j['name']
 									issue["description"] = j['description']
 									issue["source_url"] = j['references'][0]['url']
+									logging.info("return of check_issue_exits for project %s : %s" % (repo, check_issue_exits(repo, str(issue))))
 									if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 										self.utils.sent_result_to_db(repo, str(issue), 'java', 'dependency-check')
 										self.es.push_data_to_elastic_search(issue, repo)
@@ -69,6 +71,7 @@ class Dependencycheckparser():
 								issue["CVE"] = j['name']
 								issue["description"] = j['description']
 								issue["source_url"] = j['references'][0]['url']
+								logging.info("return of check_issue_exits for project %s : %s" % (repo, check_issue_exits(repo, str(issue))))
 								if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 									self.utils.sent_result_to_db(repo, str(issue), 'java', 'dependency-check')
 									self.es.push_data_to_elastic_search(issue, repo)
@@ -86,6 +89,7 @@ class Dependencycheckparser():
 								issue["CVE"] = j['name']
 								issue["description"] = j['description']
 								issue["source_url"] = j['references'][0]['url']
+								logging.info("return of check_issue_exits for project %s : %s" % (repo, check_issue_exits(repo, str(issue))))
 								if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 									self.utils.sent_result_to_db(repo, str(issue), 'java', 'dependency-check')
 									self.es.push_data_to_elastic_search(issue, repo)
@@ -106,6 +110,7 @@ class Dependencycheckparser():
 								issue["CVE"] = j['name']
 								issue["description"] = j['description']
 								issue["source_url"] = j['references'][0]['url']
+								logging.info("return of check_issue_exits for project %s : %s" % (repo, check_issue_exits(repo, str(issue))))
 								if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 									self.utils.sent_result_to_db(repo, str(issue), 'java', 'dependency-check')
 									self.es.push_data_to_elastic_search(issue, repo)
