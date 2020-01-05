@@ -41,11 +41,12 @@ class Fsbparser():
 										issue["line_no_start"] = i['SourceLine']['@start']
 										issue["line_no_end"] = i['SourceLine']['@start']
 									if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
+										logging.debug("Successfully parsed json file for project %s" % (repo))
 										self.utils.sent_result_to_db(repo, str(issue), 'java', 'find-sec-bugs')
 										self.es.push_data_to_elastic_search(issue, repo)
 										# self.utils.sent_to_slack(repo, json.dumps(issue, indent=4))
 							except Exception as e:
-								print(e)
+								logging.debug("Error parsing json file for project %s" % (repo))
 
 			if os.path.exists('%s%s/main.json' % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)):
 				with open('%s%s/main.json' % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)) as file:
@@ -66,11 +67,12 @@ class Fsbparser():
 										issue["line_no_start"] = i['SourceLine']['@start']
 										issue["line_no_end"] = i['SourceLine']['@start']
 									if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
+										logging.debug("Successfully parsed json file for project %s" % (repo))
 										self.utils.sent_result_to_db(repo, str(issue), 'java', 'find-sec-bugs')
 										self.es.push_data_to_elastic_search(issue, repo)
 										# self.utils.sent_to_slack(repo, json.dumps(issue, indent=4))
 							except Exception as e:
-								print(e)			
+								logging.debug("Error parsing json file for project %s" % (repo))	
 			return
 
 	def maven_output(self, repo:str):
@@ -93,11 +95,14 @@ class Fsbparser():
 										issue["line_no_end"] = i['SourceLine']['@start']
 										issue["line_no_end"] = i['SourceLine']['@start']
 									if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
+										logging.debug("Successfully parsed json file for project %s" % (repo))
 										self.utils.sent_result_to_db(repo, str(issue), 'java', 'find-sec-bugs')
 										self.es.push_data_to_elastic_search(issue, repo)
 										self.utils.sent_to_slack(repo, json.dumps(issue, indent=4))
+
 						except Exception as e:
-							print(e)
+							logging.debug("Error parsing json file for project %s" % (repo))
+							
 
 		if os.path.exists('%s%s/spotbugsXml.json' % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)):
 			with open('%s%s/spotbugsXml.json' % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)) as file:
@@ -118,9 +123,10 @@ class Fsbparser():
 										issue["line_no_end"] = i['SourceLine']['@start']
 										issue["line_no_end"] = i['SourceLine']['@start']
 									if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
+										logging.debug("Successfully parsed json file for project %s" % (repo))
 										self.utils.sent_result_to_db(repo, str(issue), 'java', 'find-sec-bugs')
 										self.es.push_data_to_elastic_search(issue, repo)
 										self.utils.sent_to_slack(repo, json.dumps(issue, indent=4))
 						except Exception as e:
-							print(e)			
+							logging.debug("Error parsing json file for project %s" % (repo))	
 		return

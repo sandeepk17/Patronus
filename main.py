@@ -41,7 +41,7 @@ fsbp = Fsbparser()
 dcp = Dependencycheckparser()
 np = Npmauditparser()
 utils = Utils()
-gl = Gitleaks()
+# gl = Gitleaks()
 
 java_repos = []
 go_repos = []
@@ -101,7 +101,7 @@ def scan_repo(repo:str):
                 Fore.YELLOW + "[+]---------- Starting scan for java project %s -------------" %  (repo) + Style.RESET_ALL)
             
             command.run_command("spotbugs", repo)
-            logging.info(Fore.GREEN +'Completed runnning findsecbugs for project %s' % (repo) + Style.RESET_ALL)
+            logging.info('Completed runnning findsecbugs for project %s' % (repo))
             if java.check_build(repo) == "maven":
                 fsbp.maven_output(repo)
             elif java.check_build(repo) == "gradle":
