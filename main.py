@@ -5,7 +5,6 @@ from core.parsers.findsecbugs_parser import Fsbparser
 from core.secretsscanning.gitleaks import Gitleaks
 from core.parsers.gosec_parser import Gosecparser
 from core.vcs.bitbucket import MyRemoteCallbacks
-from core.utils.json_parsing import Jsonparsing 
 from core.sast.constants import Constants
 from core.utils.commands import Command
 from core.sast.nodejs import NodeJs
