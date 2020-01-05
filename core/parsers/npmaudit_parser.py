@@ -37,7 +37,7 @@ class Npmauditparser():
 								issue["patched_versions"] = res['advisories'][i]['patched_versions']
 								if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 									self.utils.sent_result_to_db(repo, str(issue), 'node-js', 'npm-audit')
-									self.es.push_data_to_elastic_search(issue)
+									self.es.push_data_to_elastic_search(issue, repo)
 									self.utils.sent_to_slack(repo, json.dumps(issue, indent=4))
 							except Exception as e:
 								print(e)

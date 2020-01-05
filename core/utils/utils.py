@@ -81,7 +81,7 @@ class Utils():
 				result = cursor.execute(sql_insert_query, val)
 				connection.commit()
 			except mysql.connector.Error as error:
-				print(error)
+				logging.debug("Error sending data for project %s. Error: %s" % (repo, error))
 				connection.rollback()
 			finally:
 			    if(connection.is_connected()):
@@ -114,7 +114,7 @@ class Utils():
 		    if res_hash in issues_list:
 		    	return True
 		except mysql.connector.Error as error:
-			print(error)
+			logging.debug("Error retreving data for project %s. Error: %s" % (repo, error))
 		finally:
 			if (connection.is_connected()):
 				cursor.close()

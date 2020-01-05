@@ -42,7 +42,7 @@ class Fsbparser():
 										issue["line_no_end"] = i['SourceLine']['@start']
 									if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 										self.utils.sent_result_to_db(repo, str(issue), 'java', 'find-sec-bugs')
-										self.es.push_data_to_elastic_search(issue)
+										self.es.push_data_to_elastic_search(issue, repo)
 										# self.utils.sent_to_slack(repo, json.dumps(issue, indent=4))
 							except Exception as e:
 								print(e)
@@ -67,7 +67,7 @@ class Fsbparser():
 										issue["line_no_end"] = i['SourceLine']['@start']
 									if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 										self.utils.sent_result_to_db(repo, str(issue), 'java', 'find-sec-bugs')
-										self.es.push_data_to_elastic_search(issue)
+										self.es.push_data_to_elastic_search(issue, repo)
 										# self.utils.sent_to_slack(repo, json.dumps(issue, indent=4))
 							except Exception as e:
 								print(e)			
@@ -94,7 +94,7 @@ class Fsbparser():
 										issue["line_no_end"] = i['SourceLine']['@start']
 									if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 										self.utils.sent_result_to_db(repo, str(issue), 'java', 'find-sec-bugs')
-										self.es.push_data_to_elastic_search(issue)
+										self.es.push_data_to_elastic_search(issue, repo)
 										self.utils.sent_to_slack(repo, json.dumps(issue, indent=4))
 						except Exception as e:
 							print(e)
@@ -119,7 +119,7 @@ class Fsbparser():
 										issue["line_no_end"] = i['SourceLine']['@start']
 									if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 										self.utils.sent_result_to_db(repo, str(issue), 'java', 'find-sec-bugs')
-										self.es.push_data_to_elastic_search(issue)
+										self.es.push_data_to_elastic_search(issue, repo)
 										self.utils.sent_to_slack(repo, json.dumps(issue, indent=4))
 						except Exception as e:
 							print(e)			

@@ -36,7 +36,7 @@ class Dependencycheckparser():
 									issue["source_url"] = j['references'][0]['url']
 									if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 										self.utils.sent_result_to_db(repo, str(issue), 'java', 'dependency-check')
-										self.es.push_data_to_elastic_search(issue)
+										self.es.push_data_to_elastic_search(issue, repo)
 										self.utils.sent_to_slack(repo, json.dumps(issue, indent=4))		
 			return
 			
@@ -56,7 +56,7 @@ class Dependencycheckparser():
 								issue["source_url"] = j['references'][0]['url']
 								if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 									self.utils.sent_result_to_db(repo, str(issue), 'java', 'dependency-check')
-									self.es.push_data_to_elastic_search(issue)
+									self.es.push_data_to_elastic_search(issue, repo)
 									self.utils.sent_to_slack(repo, json.dumps(issue, indent=4))		
 		return
 
@@ -76,6 +76,6 @@ class Dependencycheckparser():
 								issue["source_url"] = j['references'][0]['url']
 								if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 									self.utils.sent_result_to_db(repo, str(issue), 'java', 'dependency-check')
-									self.es.push_data_to_elastic_search(issue)
+									self.es.push_data_to_elastic_search(issue, repo)
 									self.utils.sent_to_slack(repo, json.dumps(issue, indent=4))		
 		return
