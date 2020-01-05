@@ -79,7 +79,7 @@ class Fsbparser():
 		if os.path.exists('%s%s/target/spotbugsXml.json' % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)):
 			with open('%s%s/target/spotbugsXml.json' % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)) as file:
 				res = json.loads(file.read())
-				if "BugInstance" in res['aBugCollection']:
+				if "BugInstance" in res['BugCollection']:
 					for i in res['BugCollection']['BugInstance']:
 						issue = {'repo':repo, 'scanner': 'find-sec-bugs', 'bug_type':'','language': 'java', 'class_name':'', 'method_name':'', 'line_no_start':'', 'line_no_end':'','file_name': '', 'vulnerable_code':'', 'severity':'', 'module_name':'', 'advisories_url':'', 'vulnerable_versions':'', 'patched_versions':'', 'dependency_url':'', 'CVE':'', 'description':'', 'source_url':'', 'title':''}
 						try:
@@ -107,7 +107,7 @@ class Fsbparser():
 		if os.path.exists('%s%s/spotbugsXml.json' % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)):
 			with open('%s%s/spotbugsXml.json' % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)) as file:
 				res = json.loads(file.read())
-				if "BugInstance" in res['aBugCollection']:
+				if "BugInstance" in res['BugCollection']:
 					for i in res['BugCollection']['BugInstance']:
 						issue = {'repo':repo, 'scanner': 'find-sec-bugs', 'bug_type':'','language': 'java', 'class_name':'', 'method_name':'', 'line_no_start':'', 'line_no_end':'','file_name': '', 'vulnerable_code':'', 'severity':'', 'module_name':'', 'advisories_url':'', 'vulnerable_versions':'', 'patched_versions':'', 'dependency_url':'', 'CVE':'', 'description':'', 'source_url':'', 'title':''}
 						try:

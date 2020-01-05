@@ -39,7 +39,6 @@ fsbp = Fsbparser()
 dcp = Dependencycheckparser()
 np = Npmauditparser()
 utils = Utils()
-# gl = Gitleaks()
 
 java_repos = []
 go_repos = []
