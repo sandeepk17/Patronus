@@ -97,7 +97,7 @@ class Utils():
 		# config.read(config_file)
 		# config.sections()
 		# connection = mysql.connector.connect(host=config['DB']['host'], database=config['DB']['database'], user=config['DB']['user'], password=config['DB']['password'])
-		try
+		try:
 			connection = mysql.connector.connect(host=self.config.DB_HOST, database=self.config.DB_DATABASE, user=self.config.DB_USER, password=self.config.DB_PASSWORD)
 			logging.debug("Mysql connection success for project %s. Error: %s" % (repo))
 		except mysql.connector.Error as error:
