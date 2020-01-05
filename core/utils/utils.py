@@ -90,12 +90,13 @@ class Utils():
 			return
 
 	def mysql_connection(self):
-		path = os.path.dirname(os.path.abspath(__file__))
-		config = configparser.ConfigParser()
-		config_file = os.path.join(os.path.dirname(__file__) + '/../../config')
-		config.read(config_file)
-		config.sections()
-		connection = mysql.connector.connect(host=config['DB']['host'], database=config['DB']['database'], user=config['DB']['user'], password=config['DB']['password'])
+		# path = os.path.dirname(os.path.abspath(__file__))
+		# config = configparser.ConfigParser()
+		# config_file = os.path.join(os.path.dirname(__file__) + '/../../config')
+		# config.read(config_file)
+		# config.sections()
+		# connection = mysql.connector.connect(host=config['DB']['host'], database=config['DB']['database'], user=config['DB']['user'], password=config['DB']['password'])
+		connection = mysql.connector.connect(host=self.config.DB_HOST, database=self.config.DB_DATABASE, user=self.config.DB_USER, password=self.config.DB_PASSWORD)
 		return connection
 
 	def check_issue_exits(self, repo:str, text:str):

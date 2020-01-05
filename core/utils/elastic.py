@@ -1,7 +1,6 @@
-from core.sast.constants import Constants
 from elasticsearch import Elasticsearch
-import json
 from config.config import Config
+import json
 
 
 class elastic():
