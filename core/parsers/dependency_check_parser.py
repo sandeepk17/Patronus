@@ -1,4 +1,3 @@
-from core.sast.constants import Constants
 from core.utils.elastic import elastic
 from mysql.connector import errorcode
 from core.utils.utils import Utils
@@ -17,7 +16,6 @@ from config.config import Config
 class Dependencycheckparser():
 	def __init__(self):
 		self.es = elastic()
-		self.const = Constants()
 		self.utils = Utils()
 		self.config = Config()
 

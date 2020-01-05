@@ -188,9 +188,8 @@ def initiate_scan():
           "[+]---------- Completed cloning all repos -------------" + Style.RESET_ALL)
     get_all_repos()
     filter_repos_by_lang()
-    scan_all_repos(java_repos + go_repos + node_repos)
+    # scan_all_repos(java_repos + go_repos + node_repos)
     dependency_check_for_all_repos(java_repos + node_repos)
-    # gitleaks_for_all_repos(java_repos + go_repos + node_repos)
     scan_complete()
     return
 

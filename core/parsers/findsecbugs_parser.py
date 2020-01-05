@@ -1,8 +1,8 @@
-from core.sast.constants import Constants
 from core.utils.elastic import elastic
 from mysql.connector import errorcode
 from core.utils.utils import Utils
 from mysql.connector import Error
+from config.config import Config
 import mysql.connector
 import configparser
 import requests
@@ -12,12 +12,10 @@ import uuid
 import time
 import os
 import sys
-from config.config import Config
 
 class Fsbparser():
 	def __init__(self):
 		self.es = elastic()
-		self.const = Constants()
 		self.utils = Utils()
 		self.config = Config()
 
@@ -40,6 +38,7 @@ class Fsbparser():
 									if type(i['SourceLine']) == dict:
 										issue["line_no_start"] = i['SourceLine']['@start']
 										issue["line_no_end"] = i['SourceLine']['@start']
+										logging.info('')
 									if self.utils.check_issue_exits(repo, str(issue)) == False and str(issue) != "":
 										logging.debug("Successfully parsed json file for project %s" % (repo))
 										self.utils.sent_result_to_db(repo, str(issue), 'java', 'find-sec-bugs')
