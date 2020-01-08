@@ -27,7 +27,6 @@ class MyRemoteCallbacks(pygit2.RemoteCallbacks):
         if allowed_types & pygit2.credentials.GIT_CREDTYPE_USERNAME:
             return pygit2.Username("git")
         elif allowed_types & pygit2.credentials.GIT_CREDTYPE_SSH_KEY:
-            # return pygit2.Keypair(username_from_url, KEY_PUB, KEY, SECRET)
             return pygit2.Keypair(username_from_url, self.config.SSH_PUB_KEY, self.config.SSH_PRI_KEY, self.config.SSH_PRI_KEY)
         else:
             return None
@@ -59,7 +58,6 @@ class MyRemoteCallbacks(pygit2.RemoteCallbacks):
                                        "%s%s" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo), callbacks=MyRemoteCallbacks())
             logging.info('Successfully cloned repo %s to %s%s' % (repo,self.config.PATRONUS_DOWNLOAD_LOCATION, repo))
         except Exception as e:
-            print(e)
             logging.debug('Error while cloning repo %s to %s%s' % (repo,self.config.PATRONUS_DOWNLOAD_LOCATION, repo))
         return
 

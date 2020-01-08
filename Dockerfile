@@ -4,7 +4,7 @@ FROM centos:centos7
 ENV JAVA_VERSION=1.8.0
 ENV MAVEN_VERSION=3.6.3
 ENV GRADLE_VERSION=5.4
-ENV NODEJS_VERSION=6.4.1
+ENV NODEJS_VERSION=12.14.0
 ENV FIND_SEC_BUGS_VERSION=
 ENV DEPENDENCY_CHECKER_VERSION=5.2.4
 
@@ -13,15 +13,26 @@ RUN yum -y update && yum clean all
 RUN yum -y install unzip
 
 #install Golang
-RUN mkdir -p /go && chmod -R 777 /go && \
-    yum install -y centos-release-scl && \
-    yum -y install git go-toolset-7-golang && yum clean all
-ENV GOPATH=/go \
-    BASH_ENV=/opt/rh/go-toolset-7/enable \
-    ENV=/opt/rh/go-toolset-7/enable \
-    PROMPT_COMMAND=". /opt/rh/go-toolset-7/enable"
-WORKDIR /go
+#RUN mkdir -p /go && chmod -R 777 /go && \
+#    yum install -y centos-release-scl && \
+#    yum -y install git go-toolset-7-golang && yum clean all
+#ENV GOPATH=/go \
+#    BASH_ENV=/opt/rh/go-toolset-7/enable \
+#    ENV=/opt/rh/go-toolset-7/enable \
+#    PROMPT_COMMAND=". /opt/rh/go-toolset-7/enable"
+#WORKDIR /go
 
+
+ENV GOLANG_VERSION 1.12.4
+ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
+ENV GOLANG_DOWNLOAD_SHA256 d7d1f1f88ddfe55840712dc1747f37a790cbcaa448f6c9cf51bbe10aa65442f5
+RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
+    && echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
+    && tar -C /usr/local -xzf golang.tar.gz \
+    && rm golang.tar.gz
+ENV GOPATH /go
+ENV GOROOT /usr/local/go
+ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
 
 
 #intall Nodejs
@@ -57,6 +68,7 @@ ENV PATH=$PATH:$GRADLE_HOME/bin JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-open
 
 #install gosec
 SHELL ["/bin/bash", "-c"]
+RUN yum -y install git 
 RUN go get github.com/securego/gosec/cmd/gosec
 RUN cp /go/bin/gosec /usr/bin/
 
@@ -84,6 +96,8 @@ RUN chmod +x findsecbugs/findsecbugs.sh
 WORKDIR /root/Patronus
 RUN pip3 install -r requirements.txt
 
+
 # cronjob
 RUN yum -y install cronie
 RUN (crontab -l 2>/dev/null; echo "10 08 * * * Patronus/main.py >> /tmp/patronus.txt") | crontab -
+CMD python3 main.py

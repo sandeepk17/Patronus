@@ -167,6 +167,7 @@ def gitleaks():
     print(Fore.YELLOW + "[+]---------- Gitleaks scanning for  %s -------------" % (
         repo) + Style.RESET_ALL)
     gl.Gitleaks(repo)
+    
     return
 
 def gitleaks_for_all_repos(repos:str):
@@ -188,7 +189,7 @@ def initiate_scan():
           "[+]---------- Completed cloning all repos -------------" + Style.RESET_ALL)
     get_all_repos()
     filter_repos_by_lang()
-    # scan_all_repos(java_repos + go_repos + node_repos)
+    scan_all_repos(java_repos + go_repos + node_repos)
     dependency_check_for_all_repos(java_repos + node_repos)
     scan_complete()
     return
@@ -220,10 +221,11 @@ def main():
     sent_to_slack("Scanning started")
     log_file = os.path.dirname(os.path.abspath(__file__)) +  "/logs/logs.txt"
     logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', filename=log_file, level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
-    logging.info('Starting logging')
+    logging.info('Started scanning')
     logo()
     initiate_scan()
-    sent_to_slack("Scanning completded")
+    logging.info('Completed scanning')
+    sent_to_slack("Scanning completed")
     return
 
 if __name__ == '__main__':

@@ -142,40 +142,32 @@ class Java():
         if self.check_build(repo) is "maven":
             if os.path.exists("%s%s/target/spotbugsXml.xml" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)):
                 with open("%s%s/target/spotbugsXml.xml" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)) as file:
-                    res = xmltodict.parse(file.read())
-                    result = json.dumps(res, indent=4)
-                    open("%s%s/target/spotbugsXml.json" %
-                         (self.config.PATRONUS_DOWNLOAD_LOCATION, repo), 'a').close()
-                    with open("%s%s/target/spotbugsXml.json" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo), 'a') as f:
-                        f.write(result)
+                    xmlString = file.read()
+                    jsonString = json.dumps(xmltodict.parse(xmlString), indent=4)
+                    with open("%s%s/target/spotbugsXml.json" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo), 'w') as f:
+                        f.write(jsonString)
 
             if os.path.exists("%s%s/spotbugsXml.xml" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)):
                 with open("%s%s/spotbugsXml.xml" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)) as file:
                     res = xmltodict.parse(file.read())
                     result = json.dumps(res, indent=4)
-                    open("%s%s/spotbugsXml.json" %
-                         (self.config.PATRONUS_DOWNLOAD_LOCATION, repo), 'a').close()
-                    with open("%s%s/spotbugsXml.json" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo), 'a') as f:
-                        f.write(result)
+                    with open("%s%s/spotbugsXml.json" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo), 'w') as f:
+                        f.write(jsonString)
 
         elif self.check_build(repo) is "gradle":
             if os.path.exists("%s%s/build/reports/findbugs/main.xml" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)):
                 with open("%s%s/build/reports/findbugs/main.xml" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)) as file:
-                    res = xmltodict.parse(file.read())
-                    result = json.dumps(res, indent=4)
-                    open("%s%s/build/reports/findbugs/main.json" %
-                         (self.config.PATRONUS_DOWNLOAD_LOCATION,repo), 'a').close()
-                    with open("%s%s/build/reports/findbugs/main.json" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo), 'a') as f:
-                        f.write(result)
+                    xmlString = file.read()
+                    jsonString = json.dumps(xmltodict.parse(xmlString), indent=4)
+                    with open("%s%s/build/reports/findbugs/main.json" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo), 'w') as f:
+                        f.write(jsonString)
 
             if os.path.exists("%s%s/main.xml" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)):
                 with open("%s%s/main.xml" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)) as file:
-                    res = xmltodict.parse(file.read())
-                    result = json.dumps(res, indent=4)
-                    open("%s%s/main.json" %
-                         (self.config.PATRONUS_DOWNLOAD_LOCATION,repo), 'a').close()
-                    with open("%s%s/main.json" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo), 'a') as f:
-                        f.write(result)
+                    xmlString = file.read()
+                    jsonString = json.dumps(xmltodict.parse(xmlString), indent=4)
+                    with open("%s%s/main.json" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo), 'w') as f:
+                        f.write(jsonString)
         else:
             pass
         return
@@ -287,6 +279,5 @@ class Java():
                 self.utils.execute_cmd("./findsecbugs.sh -xml -output %s%s/main.xml %s%s" % (self.config.PATRONUS_DOWNLOAD_LOCATION,repo, self.config.PATRONUS_DOWNLOAD_LOCATION,repo), repo)
                 self.convert_xml_to_json(repo)
         except Exception as e:
-            print(e)
-            logging.debug("Error running find-sec-bugs on %s" % (repo))
+            logging.debug("Error running find-sec-bugs on %s. Error: %s" % (repo, e))
         return

@@ -1,24 +1,21 @@
-from core.sast.constants import Constants
 from core.utils.elastic import elastic
 from mysql.connector import errorcode
 from core.utils.utils import Utils
 from mysql.connector import Error
+from config.config import Config
 import mysql.connector
 import configparser
-import requests
+import requests 
 import hashlib
 import json
 import uuid
 import time
-import os
-import hashlib 
 import sys
-from config.config import Config
+import os
 
 class Gitleaksparser():
 	def __init__(self):
 		self.es = elastic()
-		self.const = Constants()
 		self.utils = Utils()
 		self.config = Config()
 

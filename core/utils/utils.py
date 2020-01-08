@@ -3,6 +3,7 @@ from core.sast.constants import Constants
 from core.utils.elastic import elastic
 from mysql.connector import errorcode
 from mysql.connector import Error
+from config.config import Config
 from os.path import dirname
 import mysql.connector
 import configparser
@@ -16,7 +17,6 @@ import requests
 import uuid
 import time
 import sys
-from config.config import Config
 
 
 
@@ -37,15 +37,15 @@ class Utils():
 	def run_cloc(self, repo:str):
 		parent_dir = dirname(dirname(os.path.abspath(os.path.dirname(__file__))))
 		os.chdir(parent_dir + '/tools')
-		self.execute_cmd('cloc %s%s --json --out=%s%s/cloc.txt' % (self.config.PATRONUS_DOWNLOAD_LOCATION,repo,self.config.PATRONUS_DOWNLOAD_LOCATION, repo), repo)
+		self.execute_cmd('cloc %s%s --json --out=%s%s/cloc.txt' % (self.const.DOWNLOAD_LOCATION,repo,self.const.DOWNLOAD_LOCATION, repo), repo)
 		return
 
 	def parse_cloc(self, repo:str):
 		lang = self.config.PATRONUS_SUPPORTED_LANG
 		lang_dict = {}
 		
-		if os.path.exists('%s%s/cloc.txt' % (self.config.PATRONUS_DOWNLOAD_LOCATION,repo)):		
-			with open('%s%s/cloc.txt' % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)) as file:
+		if os.path.exists('%s%s/cloc.txt' % (self.const.DOWNLOAD_LOCATION,repo)):		
+			with open('%s%s/cloc.txt' % (self.const.DOWNLOAD_LOCATION, repo)) as file:
 				res = json.loads(file.read())
 				if res.get('Java'):
 					if res['Java']['nFiles']:
@@ -62,7 +62,6 @@ class Utils():
 
 	def detect_programming_language(self, repo:str):
 		"""
-		https://stackoverflow.com/questions/268272/getting-key-with-maximum-value-in-dictionary
 		"""
 		self.run_cloc(repo)
 		lang_dict = self.parse_cloc(repo)
@@ -72,17 +71,21 @@ class Utils():
 
 	def sent_result_to_db(self, repo:str, text:str, language:str=None, scanner:str=None):
 			try:
+				logging.info("inside sent_result_to_db() for project %s" % (repo))
 				connection = self.mysql_connection()
 				sql_insert_query = "INSERT INTO results (scan_id, project_name, issue, language, scanner, hash) VALUES (%s, %s, %s, %s, %s, %s)"
 				sid = uuid.uuid1()
 				res_hash = hashlib.sha256(text.encode()).hexdigest()
 				val = (str(sid), repo, text, language, scanner, res_hash)
 				cursor = connection.cursor(prepared=True)
-				result = cursor.execute(sql_insert_query, val)
-				connection.commit()
-				logging.info("Succefully sent data to database for project %s. Error: %s" % (repo, error))
+				try:
+					result = cursor.execute(sql_insert_query, val)
+					connection.commit()
+					logging.info("Data sent to database for project %s" % (repo))
+				except mysql.connector.Error as error:
+					logging.info("Error sending data to database for project :%s : Error %s" % (repo, error))
 			except mysql.connector.Error as error:
-				logging.debug("Error sending data to database for project %s. Error: %s" % (repo, error))
+				logging.debug("Error sending data sent to database for project %s" % (repo))
 				connection.rollback()
 			finally:
 			    if(connection.is_connected()):
@@ -90,24 +93,17 @@ class Utils():
 			        connection.close()
 			return
 
-	def mysql_connection(self, repo):
-		# path = os.path.dirname(os.path.abspath(__file__))
-		# config = configparser.ConfigParser()
-		# config_file = os.path.join(os.path.dirname(__file__) + '/../../config')
-		# config.read(config_file)
-		# config.sections()
-		# connection = mysql.connector.connect(host=config['DB']['host'], database=config['DB']['database'], user=config['DB']['user'], password=config['DB']['password'])
+	def mysql_connection(self):
 		try:
 			connection = mysql.connector.connect(host=self.config.DB_HOST, database=self.config.DB_DATABASE, user=self.config.DB_USER, password=self.config.DB_PASSWORD)
-			logging.debug("Mysql connection success for project %s. Error: %s" % (repo))
-		except mysql.connector.Error as error:
-			logging.debug("Mysql connection error for project %s. Error: %s" % (repo, error))
+		except:
+			logging.info('Error connecting mysql')
 		return connection
 
 	def check_issue_exits(self, repo:str, text:str):
 		issues_list = []
 		try:
-		    connection = self.mysql_connection(repo)
+		    connection = self.mysql_connection()
 		    sql_select_query = "SELECT hash from results WHERE project_name=%s"
 		    res_hash = hashlib.sha256(text.encode()).hexdigest()
 		    val = (repo,)
@@ -115,11 +111,13 @@ class Utils():
 		    result = cursor.execute(sql_select_query, val)
 		    res = cursor.fetchall()
 		    for x in res:
-		    	issues_list.append(x[0].decode())
+		    	issues_list.append(x[0])
 		    if res_hash in issues_list:
+		    	logging.info("Data already exist for project %s" % (repo))
 		    	return True
-		except mysql.connector.Error as error:
-			logging.debug("Error retreving data for project %s. Error: %s" % (repo, error))
+		    logging.info("Data does not exist for project %s" % (repo))
+		except Exception as error:
+			logging.debug("Error sending data sent to database for project %s. Error: %s" % (repo, error))
 		finally:
 			if (connection.is_connected()):
 				cursor.close()
