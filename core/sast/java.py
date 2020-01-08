@@ -259,11 +259,11 @@ class Java():
 
     def retry_for_failed_attempts(self, repo:str, build:str):
         if build is "maven":   
-            if not os.path.exists("/tmp/%s/target/spotbugsXml.xml" % (repo)):    
+            if not os.path.exists("%s%s/target/spotbugsXml.xml" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)):    
                 self.fsb(repo, "maven")
         if build is "gradle":    
-            if not os.path.exists("/tmp/%s/build/reports/findbugs/main.xml" % (repo)):
-                self.fsb(repo, "gradle")
+            if not os.path.exists("%s%s/build/reports/findbugs/main.xml" % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo)):
+                self.fsb(repo, "/gradle")
         return
 
     def fsb(self, repo:str, build:str):

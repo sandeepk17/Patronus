@@ -1,10 +1,10 @@
 from core.vcs.bitbucket import MyRemoteCallbacks
-from core.utils.utils import Utils
 from core.sast.constants import Constants
+from core.utils.utils import Utils
+from config.config import Config
 import subprocess
 import logging
 import os
-from config.config import Config
 
 
 class GoLang():
@@ -20,10 +20,9 @@ class GoLang():
         """
         Initiates gosec scan
         """
-        # if os.path.exists()
         os.chdir('%s%s' % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo))
         try:
-            self.utils.execute_cmd("/home/ec2-user/go/bin/gosec -no-fail -fmt=json -out=%s%s/results.json ./..." % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo),repo)
+            self.utils.execute_cmd("gosec -no-fail -fmt=json -out=%s%s/results.json ./..." % (self.config.PATRONUS_DOWNLOAD_LOCATION, repo),repo)
         except:
             logging.debug("Error running dependency-check on %s" % (repo))
         return
